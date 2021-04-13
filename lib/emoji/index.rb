@@ -33,7 +33,13 @@ module Emoji
 
       annotated_name_strings = @emoji_by_name.keys.map{|name| ":#{name}:" }
       @named_moji_regex = /#{ annotated_name_strings.join('|') }/
-      @unicode_moji_regex = /#{ @emoji_by_moji.keys.join('|') }/
+      
+      regex_keys = @emoji_by_moji.keys
+      regex_keys.delete("*️⃣")
+      
+      # My editor freaks out at the sight of this below but it's a \ then a *️⃣.
+      # Apparently the * keycap needs to be escaped or it'll explode.
+      @unicode_moji_regex = /#{regex_keys.join('|')}|\*️⃣/
     end
   end
 end

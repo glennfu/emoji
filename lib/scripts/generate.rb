@@ -41,7 +41,11 @@ data.each do |line|
   # Parser help from: https://github.com/github/gemoji/blob/master/db/emoji-test-parser.rb
   row, desc = line.split("#", 2)
   name = desc.strip.split(" ", 2)[1]
-  name = name.split(":").first
+  if name.start_with?("keycap")
+    name = name.gsub(":", "")
+  else
+    name = name.split(":").first
+  end
   codepoints, qualification = row.split(";", 2)
   next if SKIP_TYPES.include?(qualification.strip)
   moji = codepoints.strip.split.map { |c| c.hex }.pack("U*")
