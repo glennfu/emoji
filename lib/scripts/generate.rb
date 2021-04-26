@@ -20,6 +20,8 @@ categories = {
   "Symbols" => "abstract",
   "??" => "tools",
   "Smileys & People" => "faces",
+  "Smileys & Emotion" => "faces",
+  "People & Body" => "faces",
   "??" => "transportation",
   "??" => "logos",
   "??" => "individuals"
@@ -28,7 +30,7 @@ categories = {
 group = nil
 index = Emoji::Index.new(existing)
 
-data = URI.open("http://www.unicode.org/Public/emoji/5.0/emoji-test.txt", "r:UTF-8")
+data = URI.open("https://www.unicode.org/Public/emoji/13.1/emoji-test.txt", "r:UTF-8")
 data.each do |line|
   if line.start_with?("# group: ")
     group = line.gsub("# group: ", "").strip
@@ -41,12 +43,15 @@ data.each do |line|
   # Parser help from: https://github.com/github/gemoji/blob/master/db/emoji-test-parser.rb
   row, desc = line.split("#", 2)
   name = desc.strip.split(" ", 2)[1]
-  if name.start_with?("keycap")
+  name = name.gsub(/E\d+\.\d /, "") # remove version info before the name
+  
+  if name.start_with?("keycap") || name.start_with?("flag")
     name = name.gsub(":", "")
   else
     name = name.split(":").first
   end
   codepoints, qualification = row.split(";", 2)
+  next if qualification.nil? # happens near the end of the file
   next if SKIP_TYPES.include?(qualification.strip)
   moji = codepoints.strip.split.map { |c| c.hex }.pack("U*")
   emoji = nil
