@@ -81,6 +81,8 @@ data.each do |line|
     puts "adding: #{new_emoji}"
     existing << new_emoji
   end
-
-  File.write("config/index.json", "[\n" + existing.map{|line| "  #{line.to_json}"}.join(",\n") + "\n]")
 end
+
+existing = existing.sort_by{|line| [(line["unicode"].nil? ? 10 : (10-line["unicode"].split(" ").size) ), line["name"]]}
+
+File.write("config/index.json", "[\n" + existing.map{|line| "  #{line.to_json}"}.join(",\n") + "\n]")

@@ -1,4 +1,4 @@
-require 'emoji/version'
+require_relative 'emoji/version'
 require 'json'
 require 'uri'
 
@@ -9,9 +9,9 @@ rescue LoadError
   require 'cgi'
 end
 
-require 'emoji/index'
+require_relative 'emoji/index'
 
-require "emoji/railtie" if defined?(Rails)
+require_relative "emoji/railtie" if defined?(Rails)
 
 module Emoji
   @asset_host = nil
